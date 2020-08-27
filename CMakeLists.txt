@@ -37,7 +37,7 @@ macro(configure_msvc_runtime)
   endif()
 endmacro()
 
-project(NetTools)
+project(cef_gui)
 
 configure_msvc_runtime()
 
@@ -56,20 +56,21 @@ set(LINK_DIR
 message(STATUS "Link dir -> " ${LINK_DIR})
 link_directories(${LINK_DIR})
 
-add_executable(cefsimple WIN32
-  ${CMAKE_SOURCE_DIR}/src/cefsimple_win.cc
-  ${CMAKE_SOURCE_DIR}/src/simple_app.cc
-  ${CMAKE_SOURCE_DIR}/src/simple_handler.cc
-  ${CMAKE_SOURCE_DIR}/src/simple_handler_win.cc
+add_executable(mygui WIN32
+  ${CMAKE_SOURCE_DIR}/src/app.cpp
+  ${CMAKE_SOURCE_DIR}/src/client.cpp
+  ${CMAKE_SOURCE_DIR}/src/main.cpp
   )
-target_link_libraries(cefsimple
+
+target_link_libraries(mygui
   libcef
   libcef_dll_wrapper
   cef_sandbox
   )
-add_custom_command(TARGET cefsimple
+
+add_custom_command(TARGET mygui
   POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
   ${CMAKE_SOURCE_DIR}/3rdparty/libcef/bin/
-  $<TARGET_FILE_DIR:cefsimple>
+  $<TARGET_FILE_DIR:mygui>
   )
