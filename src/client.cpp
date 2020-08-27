@@ -29,8 +29,6 @@ void MyClient::OnAfterCreated(CefRefPtr<CefBrowser> browser)
 {
     CEF_REQUIRE_UI_THREAD();
     browser_list_.push_back(browser);
-    CefWindowHandle hwnd = browser->GetHost()->GetWindowHandle();
-    SetWindowPos(hwnd, HWND_TOP, 0, 0, 1024, 768, SWP_NOMOVE);
 }
 
 bool MyClient::DoClose(CefRefPtr<CefBrowser> browser)
@@ -76,6 +74,21 @@ bool MyClient::OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& even
     if (event.type == KEYEVENT_RAWKEYDOWN) {
         if (event.windows_key_code == VK_F5) {
             browser->Reload();
+            return true;
+        }
+        if (event.windows_key_code == VK_F12) {
+            if (browser->GetHost()->HasDevTools()) {
+                browser->GetHost()->CloseDevTools();
+            }
+            else {
+                CefBrowserSettings browser_settings;
+                CefWindowInfo window_info;
+                window_info.SetAsPopup(browser->GetHost()->GetWindowHandle(), "DevTools");
+                window_info.width = 1200;
+                window_info.height = 675;
+                CefPoint pt(0, 0);
+                browser->GetHost()->ShowDevTools(window_info, nullptr, browser_settings, pt);
+            }
             return true;
         }
         if (event.windows_key_code == VK_LEFT && (event.modifiers & EVENTFLAG_ALT_DOWN)) {
