@@ -2,15 +2,17 @@
     "files.exclude": {
         "bin": true,
         "dest": true,
+        "GPUCache": true,
     },
     "files.watcherExclude": {
         "bin": true,
         "dest": true,
+        "GPUCache": true,
     },
     "C_Cpp.default.includePath": [
         "${workspaceFolder}",
         "${workspaceFolder}/src/",
-        "${workspaceFolder}/NetTools/3rdparty/libcef/"
+        "${workspaceFolder}/3rdparty/libcef/"
     ],
     "C_Cpp.autoAddFileAssociations": false,
     "explorer.autoReveal": false

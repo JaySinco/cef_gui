@@ -56,21 +56,21 @@ set(LINK_DIR
 message(STATUS "Link dir -> " ${LINK_DIR})
 link_directories(${LINK_DIR})
 
-add_executable(mygui WIN32
-  ${CMAKE_SOURCE_DIR}/src/app.cpp
-  ${CMAKE_SOURCE_DIR}/src/client.cpp
-  ${CMAKE_SOURCE_DIR}/src/main.cpp
+add_executable(demo WIN32
+  ${CMAKE_SOURCE_DIR}/src/basic_client.cpp
+  ${CMAKE_SOURCE_DIR}/src/basic_app.cpp
+  ${CMAKE_SOURCE_DIR}/src/demo.cpp
   )
 
-target_link_libraries(mygui
+target_link_libraries(demo
   libcef
   libcef_dll_wrapper
   cef_sandbox
   )
 
-add_custom_command(TARGET mygui
+add_custom_command(TARGET demo
   POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
   ${CMAKE_SOURCE_DIR}/3rdparty/libcef/bin/
-  $<TARGET_FILE_DIR:mygui>
+  $<TARGET_FILE_DIR:demo>
   )

@@ -1,16 +1,17 @@
 #pragma once
 #include <list>
 #include "include/cef_client.h"
+#include "include/wrapper/cef_message_router.h"
 
-class MyClient: public CefClient,
-                public CefDisplayHandler,
-                public CefLifeSpanHandler,
-                public CefRequestHandler,
-                public CefKeyboardHandler,
-                public CefLoadHandler
+class BasicClient: public CefClient,
+                   public CefDisplayHandler,
+                   public CefLifeSpanHandler,
+                   public CefRequestHandler,
+                   public CefKeyboardHandler,
+                   public CefLoadHandler
 {
 public:
-    MyClient() {}
+    BasicClient() {}
 
     // CefClient methods:
     CefRefPtr<CefDisplayHandler> GetDisplayHandler() override { return this; }
@@ -18,6 +19,8 @@ public:
     CefRefPtr<CefRequestHandler> GetRequestHandler() override { return this; }
     CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() override { return this; }
     CefRefPtr<CefLoadHandler> GetLoadHandler() override { return this; }
+    bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+        CefProcessId source_process, CefRefPtr<CefProcessMessage> message) override;
 
     // CefDisplayHandler methods:
     void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title) override;
@@ -34,6 +37,9 @@ public:
     // CefRequestHandler methods:
     bool OnOpenURLFromTab(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url,
         CefRequestHandler::WindowOpenDisposition target_disposition, bool user_gesture) override;
+    bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+        CefRefPtr<CefRequest> request, bool user_gesture, bool is_redirect) override;
+    void OnRenderProcessTerminated(CefRefPtr<CefBrowser> browser, TerminationStatus status) override;
 
     // CefKeyboardHandler methods:
     bool OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event, CefEventHandle os_event);
@@ -44,5 +50,8 @@ public:
 
 private:
     std::list<CefRefPtr<CefBrowser>> browser_list_;
-    IMPLEMENT_REFCOUNTING(MyClient);
+    CefRefPtr<CefMessageRouterBrowserSide> message_router_;
+    scoped_ptr<CefMessageRouterBrowserSide::Handler> message_handler_;
+    IMPLEMENT_REFCOUNTING(BasicClient);
+    DISALLOW_COPY_AND_ASSIGN(BasicClient);
 };
