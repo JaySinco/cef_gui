@@ -57,8 +57,10 @@ message(STATUS "Link dir -> " ${LINK_DIR})
 link_directories(${LINK_DIR})
 
 add_executable(demo WIN32
+  ${CMAKE_SOURCE_DIR}/src/common.cpp
   ${CMAKE_SOURCE_DIR}/src/basic_client.cpp
   ${CMAKE_SOURCE_DIR}/src/basic_app.cpp
+  ${CMAKE_SOURCE_DIR}/src/msg_handler.cpp
   ${CMAKE_SOURCE_DIR}/src/demo.cpp
   )
 

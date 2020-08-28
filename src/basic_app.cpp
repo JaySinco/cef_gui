@@ -18,8 +18,8 @@ void BasicApp::OnContextInitialized()
     CefBrowserSettings browser_settings;
     CefWindowInfo window_info;
     window_info.SetAsPopup(NULL, wnd_title_);
-    window_info.width = 800;
-    window_info.height = 600;
+    window_info.width = wnd_width_;
+    window_info.height = wnd_height_;
     CefBrowserHost::CreateBrowser(window_info, handler, url, browser_settings, nullptr, nullptr);
 }
 

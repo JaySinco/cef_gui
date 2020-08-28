@@ -6,40 +6,9 @@
 #include "include/views/cef_window.h"
 #include "include/wrapper/cef_closure_task.h"
 #include "include/wrapper/cef_helpers.h"
+#include "common.h"
 #include "basic_client.h"
-
-namespace
-{
-
-std::string GetDataURI(const std::string& data, const std::string& mime_type)
-{
-    return "data:" + mime_type + ";base64," + CefURIEncode(
-        CefBase64Encode(data.data(), data.size()), false).ToString();
-}
-
-class MessageHandler: public CefMessageRouterBrowserSide::Handler
-{
-public:
-    MessageHandler() {}
-
-    bool OnQuery(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, int64 query_id,
-        const CefString& request, bool persistent, CefRefPtr<Callback> callback) override
-    {
-        std::wstring message_name = request;
-        if (message_name.find(L"MessageRouterTest") == 0) {
-            std::wstring result = message_name.substr(18);
-            std::reverse(result.begin(), result.end());
-            callback->Success(result);
-            return true;
-        }
-        return false;
-    }
-
-private:
-    DISALLOW_COPY_AND_ASSIGN(MessageHandler);
-};
-
-}
+#include "msg_handler.h"
 
 bool BasicClient::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
     CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
@@ -76,6 +45,7 @@ bool BasicClient::DoClose(CefRefPtr<CefBrowser> browser)
 void BasicClient::OnBeforeClose(CefRefPtr<CefBrowser> browser)
 {
     CEF_REQUIRE_UI_THREAD();
+    message_router_->OnBeforeClose(browser);
     for (auto it = browser_list_.begin(); it != browser_list_.end(); ++it) {
         if ((*it)->IsSame(browser)) {
             browser_list_.erase(it);
@@ -137,8 +107,10 @@ bool BasicClient::OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& e
                 CefBrowserSettings browser_settings;
                 CefWindowInfo window_info;
                 window_info.SetAsPopup(browser->GetHost()->GetWindowHandle(), "DevTools");
-                window_info.width = 1000;
-                window_info.height = 600;
+                RECT rect;
+                GetWindowRect(browser->GetHost()->GetWindowHandle(), &rect);
+                window_info.height = rect.bottom - rect.top;
+                window_info.width = window_info.height / 3 * 5;
                 CefPoint pt(0, 0);
                 browser->GetHost()->ShowDevTools(window_info, nullptr, browser_settings, pt);
             }

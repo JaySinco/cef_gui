@@ -7,8 +7,8 @@ class BasicApp: public CefApp,
                 public CefRenderProcessHandler
 {
 public:
-    BasicApp(const std::wstring &window_title, const std::wstring &app_url)
-        : wnd_title_(window_title), app_url_(app_url) {}
+    BasicApp(const std::wstring &wnd_title, int wnd_width, int wnd_height, const std::wstring &app_url)
+        : wnd_title_(wnd_title), wnd_width_(wnd_width), wnd_height_(wnd_height), app_url_(app_url) {}
 
     // CefApp methods:
     CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() override { return this; }
@@ -28,6 +28,7 @@ public:
 
 private:
     std::wstring wnd_title_;
+    int wnd_width_, wnd_height_;
     std::wstring app_url_;
     CefRefPtr<CefMessageRouterRendererSide> message_router_;
     IMPLEMENT_REFCOUNTING(BasicApp);
