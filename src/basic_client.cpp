@@ -137,8 +137,8 @@ bool BasicClient::OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& e
                 CefBrowserSettings browser_settings;
                 CefWindowInfo window_info;
                 window_info.SetAsPopup(browser->GetHost()->GetWindowHandle(), "DevTools");
-                window_info.width = 1200;
-                window_info.height = 675;
+                window_info.width = 1000;
+                window_info.height = 600;
                 CefPoint pt(0, 0);
                 browser->GetHost()->ShowDevTools(window_info, nullptr, browser_settings, pt);
             }
