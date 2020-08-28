@@ -3,21 +3,20 @@
 <title>Message Router Example</title>
 <script language="JavaScript">
 
-// Send a query to the browser process.
+function onReceiveIpcMessage(request) {
+  document.getElementById('res2').value = 'Request: '+request;
+}
+
 function sendMessage() {
-  // Results in a call to the OnQuery method in client_impl.cc.
   window.cefQuery({
-    request: 'FromJs: ' + JSON.stringify(document.getElementById("message").value),
+    request: 'IpcFromJsDemo: ' + JSON.stringify(document.getElementById("message").value),
     onSuccess: function(response) {
-      document.getElementById('res1').value = 'Response From Cpp: '+response;
+      document.getElementById('res1').value = 'Response: '+response;
     },
     onFailure: function(error_code, error_message) { console.log(error_code, error_message) }
   });
 }
 
-function onReceiveIpcMessage(request) {
-  document.getElementById('res2').value = 'Request From Cpp: '+request;
-}
 </script>
 
 </head>

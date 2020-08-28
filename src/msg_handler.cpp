@@ -1,3 +1,4 @@
+#include <thread>
 #include "include/wrapper/cef_helpers.h"
 #include "json.hpp"
 #include "common.h"
@@ -8,14 +9,14 @@ using json = nlohmann::json;
 namespace
 {
 
-void SendIpcMessageToJs(CefRefPtr<CefFrame> frame, const std::wstring &header, const json &body)
+// can be called on any thread in the browser process
+void SendIpcMessageToJs(CefRefPtr<CefBrowser> browser, const std::wstring &header, const json &body)
 {
-    CEF_REQUIRE_UI_THREAD();
     std::wostringstream ss;
     ss << header << ": " << StringToWString(body.dump());
     auto msg = CefProcessMessage::Create(L"SendIpcMessageToJs");
     msg->GetArgumentList()->SetString(0, ss.str());
-    frame->SendProcessMessage(PID_RENDERER, msg);
+    browser->GetMainFrame()->SendProcessMessage(PID_RENDERER, msg);
 }
 
 }
@@ -32,17 +33,19 @@ bool MessageHandler::OnQuery(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> 
     json body = json::parse(request_ws.substr(comma_i+2), nullptr, false);
 
     // handle based on header & json body
-    if (header == L"FromJs") {
+    if (header == L"IpcFromJsDemo") {
         if (!body.is_string()) {
-            callback->Failure(998, L"expect json string!");
+            callback->Failure(0, L"json body should be string");
             return true;
         }
-        auto result = StringToWString(body.get<std::string>());
-        std::reverse(result.begin(), result.end());
-        json j = R"({"rtn": 0})"_json;
-        j["msg"] = WStringToString(result);
-        callback->Success(j.dump());
-        SendIpcMessageToJs(browser->GetMainFrame(), L"FromCpp", R"("fuckme!")"_json);
+        auto echo = StringToWString(body.get<std::string>());
+        std::reverse(echo.begin(), echo.end());
+        json j1 = WStringToString(echo);
+        std::thread([=] {
+            std::this_thread::sleep_for(std::chrono::seconds(3));
+            SendIpcMessageToJs(browser, L"IpcToJsDemo", body);
+        }).detach();
+        callback->Success(j1.dump());
         return true;
     }
 
