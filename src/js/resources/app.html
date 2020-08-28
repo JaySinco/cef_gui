@@ -7,12 +7,16 @@
 function sendMessage() {
   // Results in a call to the OnQuery method in client_impl.cc.
   window.cefQuery({
-    request: 'MessageRouterTest:' + document.getElementById("message").value,
+    request: 'FromJs: ' + JSON.stringify(document.getElementById("message").value),
     onSuccess: function(response) {
-      document.getElementById('result').value = 'Response: '+response;
+      document.getElementById('res1').value = 'Response From Cpp: '+response;
     },
-    onFailure: function(error_code, error_message) {}
+    onFailure: function(error_code, error_message) { console.log(error_code, error_message) }
   });
+}
+
+function onReceiveIpcMessage(request) {
+  document.getElementById('res2').value = 'Request From Cpp: '+request;
 }
 </script>
 
@@ -22,7 +26,8 @@ function sendMessage() {
 Message: <input type="text" id="message" value="My Message">
 <br/><input type="button" onclick="sendMessage();" value="Send Message">
 <br/>You should see the reverse of your message below:
-<br/><textarea rows="10" cols="40" id="result"></textarea>
+<br/><textarea rows="5" cols="40" id="res1"></textarea>
+<br/><textarea rows="5" cols="40" id="res2"></textarea>
 </form>
 </body>
 </html>

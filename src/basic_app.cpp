@@ -44,6 +44,17 @@ void BasicApp::OnContextReleased(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFra
 bool BasicApp::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
     CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
 {
-    return message_router_->OnProcessMessageReceived(browser, frame, source_process, message);
+    if (!message_router_->OnProcessMessageReceived(browser, frame, source_process, message))
+    {
+        if (message->GetName() == L"SendIpcMessageToJs") {
+            std::ostringstream ss;
+            ss << "onReceiveIpcMessage(`" << message->GetArgumentList()->GetString(0) << "`);";
+            browser->GetMainFrame()->ExecuteJavaScript(ss.str(), frame->GetURL(), 0);
+        }
+        else {
+            return false;
+        }
+    }
+    return true;
 }
 

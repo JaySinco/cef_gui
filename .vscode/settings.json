@@ -3,6 +3,7 @@
         "bin": true,
         "dest": true,
         "GPUCache": true,
+        "src/json.hpp": true,
     },
     "files.watcherExclude": {
         "bin": true,

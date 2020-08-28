@@ -6,9 +6,19 @@
 #include "include/views/cef_window.h"
 #include "include/wrapper/cef_closure_task.h"
 #include "include/wrapper/cef_helpers.h"
-#include "common.h"
 #include "basic_client.h"
 #include "msg_handler.h"
+
+namespace
+{
+
+std::string GetDataURI(const std::string& data, const std::string& mime_type)
+{
+    return "data:" + mime_type + ";base64," + CefURIEncode(
+        CefBase64Encode(data.data(), data.size()), false).ToString();
+}
+
+}
 
 bool BasicClient::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
     CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
