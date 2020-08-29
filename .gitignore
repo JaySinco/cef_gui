@@ -2,3 +2,5 @@ bin/
 dest/
 3rdparty/
 GPUCache/
+src/js/resources/*.js
+src/js/resources/*.js.map

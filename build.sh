@@ -13,8 +13,4 @@ cmake -G "Visual Studio 15 2017 Win64"  ../ \
     -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=${current_dir}/bin/ \
     -DMSVC_RUNTIME=static \
 && \
-MSBuild.exe -p:Configuration=Release *.sln -maxcpucount \
-&& \
-rm -rf ${current_dir}/bin/resources \
-&& \
-cp -r ${current_dir}/src/js/resources ${current_dir}/bin/resources
+MSBuild.exe -p:Configuration=Release *.sln -maxcpucount
