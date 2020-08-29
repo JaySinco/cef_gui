@@ -1,6 +1,5 @@
 bin/
 dest/
-3rdparty/
+external/
 GPUCache/
-src/js/resources/*.js
-src/js/resources/*.js.map
+render/node_modules/

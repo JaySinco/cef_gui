@@ -11,6 +11,7 @@ interface CefQueryArg {
 declare global {
     interface Window {
         cefQuery: (arg: CefQueryArg) => void;
+        onReceiveIpcMessage: (request: string) => void; 
     }
 }
 
@@ -35,7 +36,7 @@ class IpcRender {
             console.error(`invalid ipc message: ${request}`);
             return;
         }
-        if (!this.ipcMapping.has(parts[0])) {
+        if (!IpcRender.ipcMapping.has(parts[0])) {
             console.error(`unregistered ipc message header: ${parts[0]}`);
             return;
         }
@@ -52,5 +53,7 @@ class IpcRender {
         });
     }
 }
+
+window.onReceiveIpcMessage = IpcRender.onReceiveIpcMessage;
 
 export let ipcRender = new IpcRender();

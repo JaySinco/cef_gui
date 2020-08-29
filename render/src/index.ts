@@ -18,3 +18,11 @@ ipcRender.on("IpcToJsDemo", (body: string) => {
     let res2 = document.getElementById('res2') as HTMLInputElement;
     res2.value = 'Request body: '+ body;
 });
+
+
+declare global {
+    interface Window {
+        sendMessage: () => void;
+    }
+}
+window.sendMessage = sendMessage;

@@ -48,7 +48,7 @@ bool BasicApp::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr
     {
         if (message->GetName() == L"SendIpcMessageToJs") {
             std::ostringstream ss;
-            ss << "IpcRender.onReceiveIpcMessage(`" << message->GetArgumentList()->GetString(0) << "`);";
+            ss << "onReceiveIpcMessage(`" << message->GetArgumentList()->GetString(0) << "`);";
             browser->GetMainFrame()->ExecuteJavaScript(ss.str(), frame->GetURL(), 0);
         }
         else {

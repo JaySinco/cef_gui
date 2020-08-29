@@ -45,23 +45,23 @@ add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 set(INCLUDE_DIR
-    ${CMAKE_SOURCE_DIR}/3rdparty/libcef/
+    ${CMAKE_SOURCE_DIR}/external/libcef/
     )
 message(STATUS "Include dir -> " ${INCLUDE_DIR})
 include_directories(${INCLUDE_DIR})
 
 set(LINK_DIR
-    ${CMAKE_SOURCE_DIR}/3rdparty/libcef/lib/
+    ${CMAKE_SOURCE_DIR}/external/libcef/lib/
     )
 message(STATUS "Link dir -> " ${LINK_DIR})
 link_directories(${LINK_DIR})
 
 add_executable(demo WIN32
-  ${CMAKE_SOURCE_DIR}/src/common.cpp
-  ${CMAKE_SOURCE_DIR}/src/basic_client.cpp
-  ${CMAKE_SOURCE_DIR}/src/basic_app.cpp
-  ${CMAKE_SOURCE_DIR}/src/msg_handler.cpp
-  ${CMAKE_SOURCE_DIR}/src/demo.cpp
+  ${CMAKE_SOURCE_DIR}/core/common.cpp
+  ${CMAKE_SOURCE_DIR}/core/basic_client.cpp
+  ${CMAKE_SOURCE_DIR}/core/basic_app.cpp
+  ${CMAKE_SOURCE_DIR}/core/msg_handler.cpp
+  ${CMAKE_SOURCE_DIR}/core/demo.cpp
   )
 
 target_link_libraries(demo
@@ -73,6 +73,6 @@ target_link_libraries(demo
 add_custom_command(TARGET demo
   POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
-  ${CMAKE_SOURCE_DIR}/3rdparty/libcef/bin/
+  ${CMAKE_SOURCE_DIR}/external/libcef/bin/
   $<TARGET_FILE_DIR:demo>
   )

@@ -1,17 +1,21 @@
 #!/bin/bash
 
 current_dir=`readlink -f .`
+source_dir=${current_dir}/render
+output_dir=${current_dir}/bin/resources
 
-pushd ${current_dir}/src/js/ \
+pushd ${source_dir}
+
+if [ ! -d "node_modules" ]; then
+    npm install
+fi
+
+rm -rf ${output_dir} \
 && \
-rm -f ./resources/*.js \
+mkdir -p ${output_dir} \
 && \
-rm -f ./resources/*.js.map \
+npx webpack \
 && \
-tsc \
-&& \
-rm -rf ${current_dir}/bin/resources \
-&& \
-cp -r resources ${current_dir}/bin/resources \
-&& \
+cp -r ${source_dir}/src/*.html ${output_dir}/
+
 popd
