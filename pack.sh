@@ -16,6 +16,6 @@ mkdir -p ${output_dir} \
 && \
 npx webpack \
 && \
-cp -r ${source_dir}/src/*.html ${output_dir}/
+cp -r ${source_dir}/src/pages/*.html ${output_dir}/
 
 popd

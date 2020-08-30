@@ -3,7 +3,7 @@ const path = require("path");
 module.exports = {
     mode: "development", // development or production
     devtool: "inline-source-map",
-    entry: "./src/app.tsx",
+    entry: "./src/index.tsx",
     output: {
         path: path.resolve(__dirname, "../bin/resources/"),
         filename: "bundle.js"
@@ -26,7 +26,11 @@ module.exports = {
                         }
                     }
                 ]
-            }
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader'],
+              }
         ]
     },
 };
