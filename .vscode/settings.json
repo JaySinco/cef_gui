@@ -1,24 +1,21 @@
 {
     "files.exclude": {
         "bin": true,
-        "dest": true,
-        "external": true,
-        "GPUCache": true,
-        "core/json.hpp": true,
+        "core/dest": true,
+        "core/external": true,
+        "core/src/json.hpp": true,
         "render/node_modules": true,
     },
     "files.watcherExclude": {
         "bin": true,
-        "dest": true,
-        "external": true,
-        "GPUCache": true,
-        "core/json.hpp": true,
+        "core/dest": true,
+        "core/external": true,
+        "core/src/json.hpp": true,
         "render/node_modules": true,
     },
     "C_Cpp.default.includePath": [
-        "${workspaceFolder}",
-        "${workspaceFolder}/core/",
-        "${workspaceFolder}/external/libcef/"
+        "${workspaceFolder}/core/src/",
+        "${workspaceFolder}/core/external/libcef/"
     ],
     "C_Cpp.autoAddFileAssociations": false,
     "explorer.autoReveal": false

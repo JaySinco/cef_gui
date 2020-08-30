@@ -1,5 +1,4 @@
 bin/
-dest/
-external/
-GPUCache/
+core/dest/
+core/external/
 render/node_modules/
