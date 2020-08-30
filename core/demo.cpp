@@ -1,14 +1,12 @@
 #include <windows.h>
 #include <sstream>
+#include "common.h"
 #include "basic_app.h"
 
 std::wstring calc_app_url()
 {
-    wchar_t szFilePath[MAX_PATH + 1] = {0};
-    GetModuleFileNameW(NULL, szFilePath, MAX_PATH);
-    (wcsrchr(szFilePath, L'\\'))[1] = 0;
     std::wostringstream ss;
-    ss << L"file://" << szFilePath << L"resources/index.html";
+    ss << L"file://" << get_resdir() << L"\\index.html";
     return ss.str();
 }
 

@@ -9,17 +9,6 @@
 #include "basic_client.h"
 #include "msg_handler.h"
 
-namespace
-{
-
-std::string GetDataURI(const std::string& data, const std::string& mime_type)
-{
-    return "data:" + mime_type + ";base64," + CefURIEncode(
-        CefBase64Encode(data.data(), data.size()), false).ToString();
-}
-
-}
-
 bool BasicClient::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
     CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
 {
@@ -151,4 +140,10 @@ void BasicClient::OnLoadError(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame>
     ss << "<html><body bgcolor=\"white\"><h2>Failed to load URL " << std::string(failedUrl)
         << " with error " << std::string(errorText) << " (" << errorCode << ").</h2></body></html>";
     frame->LoadURL(GetDataURI(ss.str(), "text/html"));
+}
+
+std::string BasicClient::GetDataURI(const std::string& data, const std::string& mime_type)
+{
+    return "data:" + mime_type + ";base64," + CefURIEncode(
+        CefBase64Encode(data.data(), data.size()), false).ToString();
 }

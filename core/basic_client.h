@@ -49,6 +49,8 @@ public:
         const CefString& errorText, const CefString& failedUrl) override;
 
 private:
+    std::string GetDataURI(const std::string& data, const std::string& mime_type);
+
     std::list<CefRefPtr<CefBrowser>> browser_list_;
     CefRefPtr<CefMessageRouterBrowserSide> message_router_;
     scoped_ptr<CefMessageRouterBrowserSide::Handler> message_handler_;

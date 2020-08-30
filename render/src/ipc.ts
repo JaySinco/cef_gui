@@ -1,4 +1,4 @@
-type OnReceiveCallback = (body: any) => void;
+type OnReceiveCallback = (body?: any) => void;
 type OnSendSuccessFunc = (response: string) => void;
 type OnSendFailedFunc = (err_code: string, err_msg: string) => void;
 
@@ -18,6 +18,25 @@ declare global {
 class IpcRender {
     static ipcMapping: Map<string, OnReceiveCallback> = new Map;
 
+    static onReceiveIpcMessage(request: string): void {
+        const parts = request.split(": ");
+        if (parts.length !== 2) {
+            console.error(`invalid ipc message: ${request}`);
+            return;
+        }
+        if (!IpcRender.ipcMapping.has(parts[0])) {
+            console.error(`unregistered ipc message header: ${parts[0]}`);
+            return;
+        }
+        const callback = IpcRender.ipcMapping.get(parts[0])!;
+        if (parts[1].length > 0) {
+            callback(JSON.parse(parts[1]));
+        }
+        else {
+            callback();
+        }
+    }
+
     public on(header: string, callback: OnReceiveCallback) {
         IpcRender.ipcMapping.set(header, callback);
     }
@@ -30,26 +49,17 @@ class IpcRender {
         IpcRender.ipcMapping.clear();
     }
 
-    static onReceiveIpcMessage(request: string): void {
-        const parts = request.split(": ");
-        if (parts.length !== 2) {
-            console.error(`invalid ipc message: ${request}`);
-            return;
-        }
-        if (!IpcRender.ipcMapping.has(parts[0])) {
-            console.error(`unregistered ipc message header: ${parts[0]}`);
-            return;
-        }
-        IpcRender.ipcMapping.get(parts[0])!(JSON.parse(parts[1]));
-    }
-
-    public send(header: string, body: any, onSuccess: OnSendSuccessFunc, 
-        onFailure: OnSendFailedFunc)
-    {
-        window.cefQuery({
-            request: `${header}: ${JSON.stringify(body)}`,
-            onSuccess,
-            onFailure,
+    public send(header: string, body?: any): Promise<string> {
+        return new Promise((reolve, reject) => {
+            window.cefQuery({
+                request: `${header}: ${body !== undefined ? JSON.stringify(body) : ""}`,
+                onSuccess: (response: string) => {
+                    reolve(response);
+                },
+                onFailure: (err_code: string, err_msg: string) => {
+                    reject(new Error(`${err_code}: ${err_msg}`));
+                }
+            });
         });
     }
 }

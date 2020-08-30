@@ -1,5 +1,9 @@
 #pragma once
 #include <string>
 
-std::wstring StringToWString(const std::string &str);
-std::string WStringToString(const std::wstring &wstr);
+// convert between utf8-string and wstring
+std::string ws2s(const std::wstring &wstr);
+std::wstring s2ws(const std::string &str);
+
+// get absolute resources directory path
+std::wstring get_resdir();
