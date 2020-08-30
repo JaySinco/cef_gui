@@ -116,11 +116,14 @@ bool BasicClient::OnKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& e
             else {
                 CefBrowserSettings browser_settings;
                 CefWindowInfo window_info;
-                window_info.SetAsPopup(browser->GetHost()->GetWindowHandle(), "DevTools");
+                HWND parent = browser->GetHost()->GetWindowHandle();
+                window_info.SetAsPopup(parent, "DevTools");
                 RECT rect;
-                GetWindowRect(browser->GetHost()->GetWindowHandle(), &rect);
+                GetWindowRect(parent, &rect);
+                window_info.x = rect.right;
+                window_info.y = rect.top;
                 window_info.height = rect.bottom - rect.top;
-                window_info.width = window_info.height / 3 * 5;
+                window_info.width = static_cast<int>(window_info.height * 1.8);
                 CefPoint pt(0, 0);
                 browser->GetHost()->ShowDevTools(window_info, nullptr, browser_settings, pt);
             }
