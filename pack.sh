@@ -8,6 +8,10 @@ pushd ${source_dir}
 
 if [ ! -d "node_modules" ]; then
     npm install
+    if [ $? -ne 0 ]; then
+        echo "[ERROR] failed to install node modules, abort!"
+        exit
+    fi
 fi
 
 rm -rf ${output_dir} \
